@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--fonts-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!--icons-->
+  <script src="https://kit.fontawesome.com/fc2f0cdae5.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library</title>
+</head>
+<body>
+  <h4 class="resizing-warning">PLEASE, RESIZE YOUR WINDOW PROPERLY</h4>
+  <div class="left-panel" id="l-panel">
+    <div class="top-content">
+      <button id="add-btn">New Book</button>
+      <p>Your form will drop here <i class="fa-solid fa-arrow-turn-down"></i></p>
+    </div>
+    <form id="creating-book" class="my-form hidden">
+      
+    </form>
+  </div>
+  <div class="right-panel" id="r-panel">
+    <nav class="navbar">
+      <div class="h1-container">
+        <h1>Welcome to your Personal Library</h1>
+      </div>
+    </nav>
+    <div class="cards-container" id="cards-container">
+      <div class="book-card">
+        <p class="title"><span>Title: </span>Book Title</p>
+        <p class="author"><span>Author: </span>Author Name</p>
+        <p class="pages-count"><span>Pages: </span>Pages Count</p>
+        <p class="started"><span>Started in: </span>mm/dd/yyyy</p>
+        <p class="finished"><span>Finished in: </span>mm/dd/yyyy</p>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
