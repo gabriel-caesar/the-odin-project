@@ -1,16 +1,18 @@
+// getting variables
 const newButton = document.getElementById('add-btn');
 const bookForm = document.getElementById('creating-book');
 
 // holds every new book's information
-let myLibrary = [];
+let myLibrary = JSON.parse(localStorage.getItem('Books')) || [];
 
 // object constructor that helps the creation of new books
-function Book(author, title, pages, start, finish) {
+function Book(author, title, pages, start, finish, status) {
   this.title = title,
   this.author = author,
   this.pages = pages,
   this.start = start,
-  this.finish = finish
+  this.finish = finish,
+  this.status = status
 }
 
 // creates a form for the user to enter the new book info
@@ -130,13 +132,13 @@ const getInfo = () => {
   hypen or \s at the end of the sentence
   --> returns true: anything that doesn't match the above
   */
-  const titleRegex = /^(?!.*(\s{2,}|\-{2,}|\:{2,}))[A-Z][A-Za-z\s\-\:]+[^.\s\-]$/g;
+  const titleRegex = /^(?!.*(\s{2,}|\-{2,}|\:{2,}))[A-Z][A-Za-z\s\-\:]+[a-z]$/gm
    /*
   --> returns false: very similar to the first regex, but returns false
   when 2 or more dot points are used consecutively
   --> return true: if the sentence ends with ONE period point
   */
-  const authorRegex = /^(?!.*(\s{2,}|\-{2,}|\.{2,}))[A-Z][A-Za-z\s\-\.]+[^\s\-]$/g
+  const authorRegex = /^(?!.*(\s{2,}|\-{2,}|\.{2,}))[A-Z][A-Za-z\s\-\.]+[a-z\.]$/g
 
   // reformats the dates accordingly
   const reformatDate = date => {
@@ -144,6 +146,7 @@ const getInfo = () => {
     return `${month}/${day}/${year}`
   };
 
+  // getting more variables (global scope)
   const authorName = document.getElementById('author').value;
   const titleName = document.getElementById('title').value;
   const pagesCount = document.getElementById('pages').value;
@@ -151,18 +154,10 @@ const getInfo = () => {
   const iDidntRead = document.getElementById('didnt-read');
 
   // tests all regexs and run the code if you read the book
-  if (iRead.checked && titleRegex.test(titleName) && authorRegex.test(authorName) && parseInt(pagesCount) >= 30 && started.value && finished.value) {
+  if (titleRegex.test(titleName) && authorRegex.test(authorName) && parseInt(pagesCount) >= 30 && started.value && finished.value) {
 
     const started = document.getElementById('started').value;
     const finished = document.getElementById('finished').value;
-    
-    const book1 = new Book(
-      authorName,
-      titleName,
-      parseInt(pagesCount),
-      reformatDate(started),
-      reformatDate(finished)
-    );
 
     const saveDialogContainer = document.getElementById('save-dialog');
     saveDialogContainer.innerHTML = `
@@ -180,56 +175,48 @@ const getInfo = () => {
     const btnOne = document.getElementById('btn-one');
     const btnTwo = document.getElementById('btn-two');
     
+    // button 'Yes, save' when the user is ready to submit the its new book
     btnOne.addEventListener('click', () => {
-      myLibrary.push(book1);
-      console.log(book1, myLibrary);
+      const cardsContainer = document.getElementById('cards-container');
+
+      // send the status if read or not accordingly to the object
+      if (iRead.checked) {
+        myLibrary.push(new Book(
+          authorName,
+          titleName,
+          parseInt(pagesCount),
+          reformatDate(started),
+          reformatDate(finished),
+          "read"
+        ));
+      } else if (iDidntRead.checked) {
+        myLibrary.push(new Book(
+          authorName,
+          titleName,
+          parseInt(pagesCount),
+          reformatDate(started),
+          reformatDate(finished),
+          "not read"
+        ));
+      }
+      
+      // stores the myLibrary data in the local storage
+      localStorage.setItem("Books", JSON.stringify(myLibrary));
+      console.log(myLibrary, "I READ THIS BOOK");
       bookForm.innerHTML = ``;
       bookForm.classList.add('hidden');
+
+      // clear the container first to prevent rendering duplicates
+      cardsContainer.innerHTML = '';
+
+      // renders the book cards and distinguish if the cards that are read or not
+      render();
     });
 
     btnTwo.addEventListener('click', () => {
       saveDialogContainer.close();
     });
-   // tests all regexs and run the code if you didn't read the book
-  } else if (iDidntRead && titleRegex.test(titleName) && authorRegex.test(authorName) && parseInt(pagesCount) >= 30 && started.value && finished.value) {
-
-    const started = document.getElementById('started').value;
-    const finished = document.getElementById('finished').value;
-
-    const book1 = new Book(
-      authorName,
-      titleName,
-      parseInt(pagesCount),
-      reformatDate(started),
-      reformatDate(finished)
-    );
-
-    const saveDialogContainer = document.getElementById('save-dialog');
-    saveDialogContainer.innerHTML = `
-    <h3>Check your new book information:</h3>
-    <p><span>Author:</span> ${authorName}</p>
-    <p><span>Title:</span> ${titleName}</p>
-    <p><span>Pages Count:</span> ${parseInt(pagesCount)}</p>
-    <p><span>Will start in:</span> ${reformatDate(started)}</p>
-    <p><span>Will finish in:</span> ${reformatDate(finished)}</p>
-    <h3>Is it accurate?</h3>
-    <button type='button' id='btn-one'>Yes, save</button>
-    <button type='button' id='btn-two'>No, return</button>
-    `;
-    saveDialogContainer.showModal();
-    const btnOne = document.getElementById('btn-one');
-    const btnTwo = document.getElementById('btn-two');
-    
-    btnOne.addEventListener('click', () => {
-      myLibrary.push(book1);
-      console.log(book1, myLibrary);
-      bookForm.innerHTML = ``;
-      bookForm.classList.add('hidden');
-    });
-
-    btnTwo.addEventListener('click', () => {
-      saveDialogContainer.close();
-    });
+   
   } else {
     alert (
       `
@@ -250,5 +237,38 @@ const getInfo = () => {
   
 };
 
-const cardsContainer = document.getElementById('cards-container');
+// renders the books when the page reloads, pulling info from localStorage
+const render = () => {
+  const cardsContainer = document.getElementById('cards-container'); 
 
+  myLibrary.filter(x => x.status === 'not read').map(y => {
+    
+    const {author, title, pages, start, finish} = y;
+      return cardsContainer.innerHTML += `
+      <div class="book-card">
+        <p class="title"><span>Title: </span>${title}</p>
+        <p class="author"><span>Author: </span>${author}</p>
+        <p class="pages-count"><span>Pages: </span>${pages}</p>
+        <p class="started"><span>Will start in: </span>${start}</p>
+        <p class="finished"><span>Will finish in: </span>${finish}</p>
+      </div>
+    `
+  });
+
+  myLibrary.filter(x => x.status === 'read').map(y => {
+    
+    const {author, title, pages, start, finish} = y;
+      return cardsContainer.innerHTML += `
+      <div class="book-card">
+        <p class="title"><span>Title: </span>${title}</p>
+        <p class="author"><span>Author: </span>${author}</p>
+        <p class="pages-count"><span>Pages: </span>${pages}</p>
+        <p class="started"><span>Started in: </span>${start}</p>
+        <p class="finished"><span>Finished in: </span>${finish}</p>
+      </div>
+    `
+  });
+};
+
+// calling the function so it runs when the page first loads or reloads
+render();

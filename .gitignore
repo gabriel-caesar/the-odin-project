@@ -1,0 +1,32 @@
+# IGNORE SYSTEM FILES
+*.log
+*.tmp
+
+#IGNORE VS CODE SETTINGS
+.vscode/
+
+#IGNORE ONEDRIVE METADATA
+desktop.ini
+Thumbs.db
+
+#IGNORE ALL .ttf FONT FILES & IMG
+*.ttf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.txt
+!Coding-notes.txt
+*.otf
+*.md
+*.webp
+
+#IGNORE DN
+dn
+
+# IGNORE THE gabri DIRECTORY
+# Ignore everything under C:/Users/gabri but keep CODE
+OneDrive/**
+!/OneDrive/Desktop/CODE/*

@@ -227,11 +227,13 @@ h3 {
 
 /*########## BOOK CARDS ############*/
 .cards-container{
-  padding: 10px;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 230px);
+  gap: 25px;
 }
 
 .book-card {
-  position: relative;
   background-color: var(--bookCover-color);
   padding: 10px;
   box-shadow: 8px 8px 0px 1px var(--title-color);
@@ -242,13 +244,6 @@ h3 {
   color: var(--title-color);
 }
 
-.book-card::after {
- 
-  width: 230px;
-  height: 180px;
-  background-color: var(--bookCover-color);
-  
-}
 
 .book-card span {
   font-size: 1.2em;
@@ -258,7 +253,36 @@ h3 {
 }
 
 /*########## MEDIA QUERIES ############*/
+@media (max-width: 1515px) {
+  .cards-container{
+    display: grid;
+    grid-template-columns: repeat(3, 230px);
+    gap: 40px;
+  }
+}
+
+@media (max-width: 1185px) {
+  .book-card span {
+    font-size: 1em;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(2, 230px);
+  }
+}
+
 @media (max-width: 1000px) {
+  
+  .cards-container {
+    grid-template-columns: repeat(2, 190px);
+    padding: 10px;
+    gap: 40px;
+  }
+
+  .book-card {
+    width: 190px;
+  }
+
   .left-panel {
     width: 50%;
     height: 850px;
@@ -267,6 +291,17 @@ h3 {
   .right-panel {
     width: 50%;
     height: 850px;
+  }
+}
+
+@media (max-width: 904px) {
+  .cards-container {
+    grid-template-columns: repeat(1, auto);
+    padding: 20px;
+  }
+  .book-card {
+    width: auto;
+    font-size: 1rem;
   }
 }
 
