@@ -1,6 +1,7 @@
 // getting variables
 const newButton = document.getElementById('add-btn');
 const bookForm = document.getElementById('creating-book');
+const cardsContainer = document.getElementById('cards-container'); 
 
 // holds every new book's information
 let myLibrary = JSON.parse(localStorage.getItem('Books')) || [];
@@ -177,10 +178,14 @@ const getInfo = () => {
     
     // button 'Yes, save' when the user is ready to submit the its new book
     btnOne.addEventListener('click', () => {
-      const cardsContainer = document.getElementById('cards-container');
-
+      
+      // check book title duplicates
+      const duplicateTitle = myLibrary.find(x => x.title === titleName);
+      // console.log(duplicateTitle, myLibrary.indexOf(duplicateTitle));
+      
       // send the status if read or not accordingly to the object
-      if (iRead.checked) {
+      // and check book title duplicates
+      if (iRead.checked && !duplicateTitle) {
         myLibrary.push(new Book(
           authorName,
           titleName,
@@ -189,7 +194,18 @@ const getInfo = () => {
           reformatDate(finished),
           "read"
         ));
-      } else if (iDidntRead.checked) {
+
+          // stores the myLibrary data in the local storage
+        localStorage.setItem("Books", JSON.stringify(myLibrary));
+        bookForm.innerHTML = ``;
+        bookForm.classList.add('hidden');
+
+        // clear the container first to prevent rendering duplicates
+        cardsContainer.innerHTML = '';
+
+        // renders the book cards and distinguish if the cards that are read or not
+        render();
+      } else if (iDidntRead.checked && !duplicateTitle) {
         myLibrary.push(new Book(
           authorName,
           titleName,
@@ -198,19 +214,26 @@ const getInfo = () => {
           reformatDate(finished),
           "not read"
         ));
+
+          // stores the myLibrary data in the local storage
+        localStorage.setItem("Books", JSON.stringify(myLibrary));
+        bookForm.innerHTML = ``;
+        bookForm.classList.add('hidden');
+
+        // clear the container first to prevent rendering duplicates
+        cardsContainer.innerHTML = '';
+
+        // renders the book cards and distinguish if the cards that are read or not
+        render();
+      } else {
+        alert (`
+          ERROR!
+
+          Duplicate book title.
+        `);
+        saveDialogContainer.close();
       }
       
-      // stores the myLibrary data in the local storage
-      localStorage.setItem("Books", JSON.stringify(myLibrary));
-      console.log(myLibrary, "I READ THIS BOOK");
-      bookForm.innerHTML = ``;
-      bookForm.classList.add('hidden');
-
-      // clear the container first to prevent rendering duplicates
-      cardsContainer.innerHTML = '';
-
-      // renders the book cards and distinguish if the cards that are read or not
-      render();
     });
 
     btnTwo.addEventListener('click', () => {
@@ -238,37 +261,58 @@ const getInfo = () => {
 };
 
 // renders the books when the page reloads, pulling info from localStorage
+
 const render = () => {
-  const cardsContainer = document.getElementById('cards-container'); 
+  
 
   myLibrary.filter(x => x.status === 'not read').map(y => {
     
     const {author, title, pages, start, finish} = y;
-      return cardsContainer.innerHTML += `
-      <div class="book-card">
+
+    const bookCard = document.createElement('div');
+    bookCard.className = "book-card";
+    bookCard.innerHTML = `
         <p class="title"><span>Title: </span>${title}</p>
         <p class="author"><span>Author: </span>${author}</p>
         <p class="pages-count"><span>Pages: </span>${pages}</p>
         <p class="started"><span>Will start in: </span>${start}</p>
         <p class="finished"><span>Will finish in: </span>${finish}</p>
-      </div>
+        <div class="btn-container">
+          <button id="remove-btn" onclick="removeBook('${title}')">Remove</button>
+          <button id="mark-btn">Mark as read</button>
+        </div>
     `
+
+    return cardsContainer.appendChild(bookCard);
   });
 
   myLibrary.filter(x => x.status === 'read').map(y => {
     
     const {author, title, pages, start, finish} = y;
-      return cardsContainer.innerHTML += `
-      <div class="book-card">
+    
+    const bookCard = document.createElement('div');
+    bookCard.className = "book-card";
+    bookCard.innerHTML = `
         <p class="title"><span>Title: </span>${title}</p>
         <p class="author"><span>Author: </span>${author}</p>
         <p class="pages-count"><span>Pages: </span>${pages}</p>
-        <p class="started"><span>Started in: </span>${start}</p>
-        <p class="finished"><span>Finished in: </span>${finish}</p>
-      </div>
+        <p class="started"><span>Will start in: </span>${start}</p>
+        <p class="finished"><span>Will finish in: </span>${finish}</p>
+        <button id="remove-btn" onclick="removeBook('${title}')">Remove</button>
     `
+    // ${title} needs to be quoted in the onclick attribute, because we want it as a string, otherwise it wont work
+    return cardsContainer.appendChild(bookCard);
   });
 };
+
+// function that removes a book
+const removeBook = title => {
+  myLibrary = myLibrary.filter(x => x.title !== title);
+  localStorage.setItem("Books", JSON.stringify(myLibrary));
+  cardsContainer.innerHTML = "";
+  render();
+}
+
 
 // calling the function so it runs when the page first loads or reloads
 render();
