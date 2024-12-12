@@ -16,6 +16,12 @@ function Book(author, title, pages, start, finish, status) {
   this.status = status
 }
 
+// reformats the dates accordingly
+const reformatDate = date => {
+  const [year, month, day] = date.split('-');
+  return `${month}/${day}/${year}`
+};
+
 // creates a form for the user to enter the new book info
 newButton.addEventListener('click', () => {
   
@@ -141,12 +147,6 @@ const getInfo = () => {
   */
   const authorRegex = /^(?!.*(\s{2,}|\-{2,}|\.{2,}))[A-Z][A-Za-z\s\-\.]+[a-z\.]$/g
 
-  // reformats the dates accordingly
-  const reformatDate = date => {
-    const [year, month, day] = date.split('-');
-    return `${month}/${day}/${year}`
-  };
-
   // getting more variables (global scope)
   const authorName = document.getElementById('author').value;
   const titleName = document.getElementById('title').value;
@@ -261,10 +261,8 @@ const getInfo = () => {
 };
 
 // renders the books when the page reloads, pulling info from localStorage
-
 const render = () => {
   
-
   myLibrary.filter(x => x.status === 'not read').map(y => {
     
     const {author, title, pages, start, finish} = y;
@@ -278,11 +276,23 @@ const render = () => {
         <p class="started"><span>Will start in: </span>${start}</p>
         <p class="finished"><span>Will finish in: </span>${finish}</p>
         <div class="btn-container">
-          <button id="remove-btn" onclick="removeBook('${title}')">Remove</button>
-          <button id="mark-btn">Mark as read</button>
+          <button id="remove-btn" onclick="showDialogTwo()">Remove</button>
+          <button id="mark-btn" onclick="showDialog()">Mark as read</button>
+          <dialog id="mark-dialog" class='dialog-style-two'>
+            <h3>Congrats for finishing the book!</h3>
+            <p>What is today's date?</p>
+            <input type="date" id="finish" aria-label="finish-reading-date" required>
+            <button id="iRead-btn" onclick="readBook('${title}')">Save</button>
+            <button id="goBack-btn" onclick="closeDialog()">Go back</button>
+          </dialog>
+          <dialog id="doubt-dialog" class='dialog-style-two'>
+            <h3>Are you sure you want to delete <span>${title}</span>?</h3>
+            <button id="sure-btn" onclick="removeBook('${title}')">Yes</button>
+            <button id="sure-not-btn" onclick="closeDialogTwo()">No</button>
+          </dialog>
         </div>
     `
-
+    
     return cardsContainer.appendChild(bookCard);
   });
 
@@ -296,9 +306,14 @@ const render = () => {
         <p class="title"><span>Title: </span>${title}</p>
         <p class="author"><span>Author: </span>${author}</p>
         <p class="pages-count"><span>Pages: </span>${pages}</p>
-        <p class="started"><span>Will start in: </span>${start}</p>
-        <p class="finished"><span>Will finish in: </span>${finish}</p>
-        <button id="remove-btn" onclick="removeBook('${title}')">Remove</button>
+        <p class="started"><span>Started in: </span>${start}</p>
+        <p class="finished"><span>Finished in: </span>${finish}</p>
+        <button id="remove-btn" onclick="showDialogTwo()">Remove</button>
+        <dialog id="doubt-dialog" class='dialog-style-two'>
+          <h3>Are you sure you want to delete <span>${title}</span>?</h3>
+          <button id="sure-btn" onclick="removeBook('${title}')">Yes</button>
+          <button id="sure-not-btn" onclick="closeDialogTwo()">No</button>
+        </dialog>
     `
     // ${title} needs to be quoted in the onclick attribute, because we want it as a string, otherwise it wont work
     return cardsContainer.appendChild(bookCard);
@@ -313,6 +328,47 @@ const removeBook = title => {
   render();
 }
 
+// show dialog when you want to delete a book
+const showDialogTwo = () => {
+  const dialog = document.getElementById('doubt-dialog');
+  dialog.showModal();
+}
+
+// show dialog when you want to mark a book as read
+const showDialog = () => {
+  const dialog = document.getElementById('mark-dialog');
+  dialog.showModal();
+};
+
+// ''reads'' the book
+const readBook = title => {
+  const finished = document.getElementById('finish').value;
+  const object = myLibrary.find(x => x.title === title);
+  
+  if (object.status === 'not read') {
+    object.status = 'read';
+    object.finish = reformatDate(finished);
+    localStorage.setItem("Books", JSON.stringify(myLibrary));
+    closeDialog();
+    cardsContainer.innerHTML = "";
+    render();
+  } else (
+    // because i don't know how you can trigger this
+    alert(`I really don't know how you got this error.`)
+  )
+};
+
+// closes 'mark as read' dialog
+const closeDialog = () => {
+  const dialog = document.getElementById('mark-dialog');
+  dialog.close();
+}
+
+// closes 'delete a book' dialog
+const closeDialogTwo = () => {
+  const dialog = document.getElementById('doubt-dialog');
+  dialog.close();
+}
 
 // calling the function so it runs when the page first loads or reloads
 render();
