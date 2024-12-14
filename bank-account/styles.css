@@ -1,0 +1,169 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+body {
+  background: url('https://images.unsplash.com/photo-1669251921941-ae3645715017?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  padding: 20px;
+  width: 60%;
+  border: 3px solid #030d65;
+  border-radius: 10px;
+  background: linear-gradient(
+    #9C9493,
+    #fff
+  );
+  overflow: auto;
+}
+
+.or {
+  text-align: center;
+  width: 100%;
+}
+
+.header {
+  letter-spacing: 4px;
+}
+
+form,
+.containers {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+}
+
+.buttons {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  background-color: #030d65;
+  color: #fff;
+}
+
+.buttons:hover {
+  cursor: pointer;
+  opacity: .9;
+}
+
+.buttons:active {
+  opacity: .7;
+}
+
+.inputs {
+  margin-right: 20px;
+  margin-block: 20px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  border-style: solid;
+}
+
+.labels {
+  font-size: 2rem;
+  margin-right: 20px;
+}
+
+.login-container h1 {
+  margin: auto;
+}
+
+#balance-container {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  width: 40%;
+  height: 30%;
+  background-color: #030d65;
+  color: #fff;
+  padding: 20px;
+  margin-block: 20px;
+  box-shadow: 0px 0px 6px 1px #030d65;
+}
+
+.display-container {
+  display: flex;
+  position: relative;
+}
+
+#goback-btn {
+  position: absolute;
+  right: -1%;
+  top: -5%;
+}
+
+span {
+  color: #ff0000;
+}
+
+@media (max-width: 431px) {
+  .display-container {
+    flex-direction: column;
+  }
+
+  #deposit-btn,
+  #withdraw-btn {
+    width: 100%;
+  }
+  
+  #deposit-btn {
+    margin-top: 20px;
+  }
+
+  #balance-container {
+    width: 100%;
+    margin: auto;
+    box-shadow: 0 0 0 0;
+  }
+
+  #header {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  #goback-btn {
+    position: normal;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1160px) {
+
+  .header {
+    font-size: 1.3rem;
+    width: 50%;
+  }
+
+  #goback-btn {
+    position: absolute;
+    right: -1%;
+    top: -3%;
+  }
+
+  .containers {
+    flex-direction: column;
+  }
+
+  .inputs {
+    margin-block: 20px;
+  }
+  
+  #login-btn {
+    margin-bottom: 20px;
+  }
+};
+
