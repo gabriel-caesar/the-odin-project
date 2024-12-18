@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- icons -->
+  <script src="https://kit.fontawesome.com/fc2f0cdae5.js" crossorigin="anonymous"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="main-container">
+    <nav id="info-bar" class="info-bar">
+
+      <div class="point" id="left-point"><i class="fa-brands fa-galactic-senate"></i></div>
+      <div class="nav-btn-container">
+        <button id="restart-btn" class="buttons">Restart</button>
+        <button class="buttons" id="info-btn">How it Works</button>
+      </div>
+      <div class="point" id="right-point"><i class="fa-brands fa-galactic-senate"></i></div>
+
+    </nav>
+
+    <dialog class="info-card"  id="info-card">
+      <p>&#x2022; Enter both player names so the game unlocks.</p>
+      <p>&#x2022; First player who has three symbols in a row, in a column or in diagonal shapes wins.</p>
+      <p style="margin-bottom: 10px">&#x2022; Coding this challenge was very hard to me, if you struggle as well you are not alone. Just keep going.</p>
+      <button id="close-info-card" class="buttons">Close</button>
+    </dialog>
+
+    <hr>
+
+    <div class="player-panel">
+
+      <div class="player-container">
+        <label for="player-one-name" class="labels" id="label-one">Player <span>X</span> name:</label>
+        <div class="btn-container">
+          <input type="text" id="player-one-name" class="inputs" value="Player One" required>
+          <button id="submit-name-one" class="submit-button"><i class="fa-solid fa-arrow-up"></i></button>
+        </div>
+      </div> 
+
+      <div class="player-container">
+        <label for="player-two-name" class="labels" id="label-two">Player <span>O</span> name: </label>
+        <div class="btn-container">
+          <button id="submit-name-two" class="submit-button"><i class="fa-solid fa-arrow-up"></i></button>
+          <input type="text" id="player-two-name" class="inputs" value="Player Two" required>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="board-panel" id="board-panel">
+      <div class="board" id="game-board">
+        
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="log" id="log">
+
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
